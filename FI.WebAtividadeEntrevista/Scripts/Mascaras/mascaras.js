@@ -24,7 +24,7 @@ function customMask(event, maskPattern) {
 
     if (keysReturn && keyPressed != 86) return;
 
-    let cursorPosition = aux.selectionStart; 
+    let cursorPosition = aux.selectionStart;
     let cleanedValue = value.replace(/[^a-zA-Z0-9]/g, "");
     let maskedValue = "";
     let patternIndex = 0;
@@ -43,7 +43,7 @@ function customMask(event, maskPattern) {
         } else if (patternChar === 'A') {
             if (/[a-zA-Z]/.test(currentChar)) {
                 maskedValue += currentChar;
-            } 
+            }
 
             valueIndex++;
         } else if (patternChar === '0') {
@@ -66,7 +66,7 @@ function customMask(event, maskPattern) {
         patternIndex++;
     }
 
-    
+
     const mask = maskPattern.replace(/[0AX]/gi, "");
     if (mask != maskedValue) {
         aux.value = maskedValue;
@@ -94,4 +94,33 @@ function removeCustomMask(value, maskPattern) {
     }
 
     return unmaskedValue;
+}
+
+function applyMask(value, maskPattern) {
+    let cleanedValue = value.replace(/[^a-zA-Z0-9]/g, "");
+    let maskedValue = "";
+    let patternIndex = 0;
+    let valueIndex = 0;
+
+    while (patternIndex < maskPattern.length && valueIndex < cleanedValue.length) {
+        let patternChar = maskPattern[patternIndex];
+        let currentChar = cleanedValue[valueIndex];
+
+        if (patternChar === 'X' && /[a-zA-Z0-9]/.test(currentChar)) {
+            maskedValue += currentChar;
+            valueIndex++;
+        } else if (patternChar === 'A' && /[a-zA-Z]/.test(currentChar)) {
+            maskedValue += currentChar;
+            valueIndex++;
+        } else if (patternChar === '0' && /[0-9]/.test(currentChar)) {
+            maskedValue += currentChar;
+            valueIndex++;
+        } else if (patternChar !== 'X' && patternChar !== 'A' && patternChar !== '0') {
+            maskedValue += patternChar;
+        }
+
+        patternIndex++;
+    }
+
+    return maskedValue;
 }

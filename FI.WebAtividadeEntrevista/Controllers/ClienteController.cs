@@ -38,11 +38,24 @@ namespace WebAtividadeEntrevista.Controllers
             {
                 BoCliente bo = new BoCliente();
 
+
+                // Verifica CPF ja cadastrado
                 bool cpfExistente = bo.VerificarExistencia(model.CPF);
                 if (cpfExistente)
                 {
                     Response.StatusCode = 400;
                     return Json("O CPF informado ja esta cadastro.");
+                }
+
+
+                // Verifica CPF do Cliente como beneficiario
+                if (model?.Beneficiarios != null)
+                {
+                    if (model.Beneficiarios.Where(w => w.CPF == model.CPF).Any())
+                    {
+                        Response.StatusCode = 400;
+                        return Json("CPF informado como beneficiario não pode ser o mesmo do Cliente.");
+                    }
                 }
 
 
@@ -103,6 +116,16 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     Response.StatusCode = 400;
                     return Json("O CPF informado ja esta cadastro.");
+                }
+
+                // Valida se o CPF do cliente ta na lista de Beneficiario
+                if (model?.Beneficiarios != null)
+                {
+                    if (model.Beneficiarios.Where(w => w.CPF == model.CPF).Any())
+                    {
+                        Response.StatusCode = 400;
+                        return Json("CPF informado como beneficiario não pode ser o mesmo do Cliente.");
+                    }
                 }
 
                 bo.Alterar(new Cliente()

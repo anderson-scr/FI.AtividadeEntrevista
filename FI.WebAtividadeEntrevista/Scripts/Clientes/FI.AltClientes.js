@@ -5,24 +5,22 @@ let indexBeneficiarioEditando;
 $(document).ready(function () {
     if (obj) {
         $('#formCadastro #Nome').val(obj.Nome);
-        $('#formCadastro #CEP').val(obj.CEP);
+        $('#formCadastro #CEP').val(applyMask(obj.CEP, "00000-000"));
         $('#formCadastro #Email').val(obj.Email);
         $('#formCadastro #Sobrenome').val(obj.Sobrenome);
         $('#formCadastro #Nacionalidade').val(obj.Nacionalidade);
         $('#formCadastro #Estado').val(obj.Estado);
         $('#formCadastro #Cidade').val(obj.Cidade);
         $('#formCadastro #Logradouro').val(obj.Logradouro);
-        $('#formCadastro #Telefone').val(obj.Telefone);
-        $('#formCadastro #Cpf').val(obj.CPF);
+        $('#formCadastro #Telefone').val(applyMask(obj.Telefone, "(00) 00000-0000"));
+        $('#formCadastro #Cpf').val(applyMask(obj.CPF, "000.000.000-00"));
     }
-    console.log(obj)
-    console.log(obj.Beneficiarios)
     beneficiarios = obj.Beneficiarios;
     atualizarBeneficiarios();
 
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
-        
+
         $.ajax({
             url: urlPost,
             method: "POST",
@@ -40,21 +38,21 @@ $(document).ready(function () {
                 "Beneficiarios": beneficiarios
             },
             error:
-            function (r) {
-                if (r.status == 400)
-                    ModalDialog("Ocorreu um erro", r.responseJSON);
-                else if (r.status == 500)
-                    ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
-            },
+                function (r) {
+                    if (r.status == 400)
+                        ModalDialog("Ocorreu um erro", r.responseJSON);
+                    else if (r.status == 500)
+                        ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                },
             success:
-            function (r) {
-                ModalDialog("Sucesso!", r)
-                $("#formCadastro")[0].reset();                                
-                window.location.href = urlRetorno;
-            }
+                function (r) {
+                    ModalDialog("Sucesso!", r)
+                    $("#formCadastro")[0].reset();
+                    window.location.href = urlRetorno;
+                }
         });
     })
-    
+
 })
 
 function ModalDialog(titulo, texto) {
@@ -89,7 +87,7 @@ function atualizarBeneficiarios() {
     beneficiarios.forEach((b, index) => {
         $('#tabelaBeneficarios').append(`
                 <tr>
-                    <td>${b.CPF}</td>
+                    <td>${applyMask(b.CPF, "000.000.000-00")}</td>
                     <td>${b.Nome}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-primary" onclick="alterarBeneficiario(${index})">Alterar</button>
