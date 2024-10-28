@@ -1,4 +1,7 @@
 ﻿
+let idCliente;
+let beneficiarios = [];
+let indexBeneficiarioEditando;
 $(document).ready(function () {
     $('#formCadastro').submit(function (e) {
         e.preventDefault();
@@ -29,6 +32,10 @@ $(document).ready(function () {
                 function (r) {
                     ModalDialog("Sucesso!", r)
                     $("#formCadastro")[0].reset();
+
+                    // Limpar a lista de beneficiarios apos salvar
+                    beneficiarios = [];
+                    atualizarBeneficiarios();
                 }
         });
     })
@@ -67,9 +74,7 @@ function ModalDialog(titulo, texto) {
 
 
 // Rennan que me ajudou em como fazer isso.
-let idCliente;
-let beneficiarios = [];
-let indexBeneficiarioEditando;
+
 function atualizarBeneficiarios() {
     $('#tabelaBeneficarios').empty();
     beneficiarios.forEach((b, index) => {
